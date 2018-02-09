@@ -12,7 +12,10 @@ $('document').ready(function() {
 
         // Pass initial value though to editor
         var hidden_identifier = 'input[name=' + name + ']';
-        options.startval = JSON.parse($(hidden_identifier).val());
+        var initial = $(hidden_identifier).val();
+        if (initial) {
+            options.startval = JSON.parse(initial);
+        }
 
         var editor = new JSONEditor(element, options);
 
