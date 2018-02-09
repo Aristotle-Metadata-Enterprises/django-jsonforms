@@ -40,10 +40,6 @@ class JSONSchemaField(JSONFormField):
 
 class JSONSchemaForm(forms.Form):
 
-    def __init__(self, schema, *args, **kwargs):
+    def __init__(self, schema, options, *args, **kwargs):
         super(JSONSchemaForm, self).__init__(*args, **kwargs)
-        self.schema = schema
-        options = {
-            'theme': 'bootstrap3'
-        }
-        self.fields['json'] = JSONSchemaField(schema=self.schema, options=options)
+        self.fields['json'] = JSONSchemaField(schema=schema, options=options)
