@@ -9,13 +9,23 @@ class JSONEditorWidget(Widget):
 
     template_name = 'django_jsonforms/jsoneditor.html'
 
-class JSONSchemaField(JSONFormField):
+    class Media:
+        js = ('django_jsonforms/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
 
-    widget = Textarea
+    def __init__(self, schema, *args, **kwargs):
+        super(JSONEditorWidget, self).__init__(*args, **kwargs)
+        self.schema = schema
+
+    def get_context(self, name, value, attrs):
+        attrs.update({'schema' : json.dumps(self.schema)})
+        return super(JSONEditorWidget, self).get_context(name, value, attrs)
+
+class JSONSchemaField(JSONFormField):
 
     def __init__(self, schema, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
         self.schema = schema
+        self.widget = JSONEditorWidget(schema=self.schema)
 
     def clean(self, value):
         value = super(JSONSchemaField, self).clean(value)
