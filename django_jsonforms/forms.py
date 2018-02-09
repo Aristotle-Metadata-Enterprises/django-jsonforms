@@ -12,20 +12,21 @@ class JSONEditorWidget(Widget):
     class Media:
         js = ('django_jsonforms/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
 
-    def __init__(self, schema, *args, **kwargs):
+    def __init__(self, schema, options, *args, **kwargs):
         super(JSONEditorWidget, self).__init__(*args, **kwargs)
         self.schema = schema
+        self.options = options
 
     def get_context(self, name, value, attrs):
-        attrs.update({'schema' : json.dumps(self.schema)})
+        attrs.update({'schema': json.dumps(self.schema), 'options': json.dumps(self.options)})
         return super(JSONEditorWidget, self).get_context(name, value, attrs)
 
 class JSONSchemaField(JSONFormField):
 
-    def __init__(self, schema, *args, **kwargs):
+    def __init__(self, schema, options, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
         self.schema = schema
-        self.widget = JSONEditorWidget(schema=self.schema)
+        self.widget = JSONEditorWidget(schema=schema, options=options)
 
     def clean(self, value):
         value = super(JSONSchemaField, self).clean(value)
@@ -42,4 +43,7 @@ class JSONSchemaForm(forms.Form):
     def __init__(self, schema, *args, **kwargs):
         super(JSONSchemaForm, self).__init__(*args, **kwargs)
         self.schema = schema
-        self.fields['json'] = JSONSchemaField(schema=self.schema)
+        options = {
+            'theme': 'bootstrap3'
+        }
+        self.fields['json'] = JSONSchemaField(schema=self.schema, options=options)
