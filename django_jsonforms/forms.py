@@ -18,8 +18,10 @@ class JSONEditorWidget(Widget):
         self.options = options
 
     def get_context(self, name, value, attrs):
-        attrs.update({'schema': json.dumps(self.schema), 'options': json.dumps(self.options)})
-        return super(JSONEditorWidget, self).get_context(name, value, attrs)
+        context = super(JSONEditorWidget, self).get_context(name, value, attrs)
+        context.update({'schema': json.dumps(self.schema), 'options': json.dumps(self.options)})
+        context['widget']['type'] = 'hidden'
+        return context
 
 class JSONSchemaField(JSONFormField):
 
