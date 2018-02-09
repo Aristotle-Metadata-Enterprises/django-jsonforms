@@ -1,2 +1,3 @@
-<div name="{{ widget.name }}" id='editor_holder' {% include "django/forms/widgets/attrs.html" %}>
+<div name="{{ widget.name }}" class="editor_holder" {% include "django/forms/widgets/attrs.html" %}>
 </div>
+<input type="hidden" name="{{ widget.name }}"></input>
