@@ -4,6 +4,9 @@ from django.forms.widgets import Textarea, Widget
 import jsonschema
 from jsonfield.fields import JSONFormField
 import json
+import os
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
 class JSONEditorWidget(Widget):
 
@@ -27,8 +30,27 @@ class JSONSchemaField(JSONFormField):
 
     def __init__(self, schema, options, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
-        self.schema = schema
-        self.widget = JSONEditorWidget(schema=schema, options=options)
+
+        self.schema = self.load(schema)
+        self.options = self.load(options)
+
+        self.widget = JSONEditorWidget(schema=self.schema, options=options)
+
+    def load(self, value):
+        if isinstance(value, dict):
+            return value
+        elif isinstance(value, str):
+            if (settings.STATIC_ROOT):
+                file_path = os.path.join(settings.STATIC_ROOT, value)
+                if os.path.isfile(file_path):
+                    static_file = open(file_path, 'r')
+                    json_value = json.loads(static_file.read())
+                    static_file.close()
+                    return json_value
+                else:
+                    raise FileNotFoundError('File could not be found')
+            else:
+                raise ImproperlyConfigured('STATIC_ROOT is not set')
 
     def clean(self, value):
         value = super(JSONSchemaField, self).clean(value)
