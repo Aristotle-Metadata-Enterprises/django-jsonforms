@@ -2,11 +2,11 @@ from django import forms
 from django.forms import fields, ValidationError
 from django.forms.widgets import Textarea, Widget
 import jsonschema
-from jsonfield.fields import JSONFormField
 import json
 import os
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import six
 
 class JSONEditorWidget(Widget):
 
@@ -38,7 +38,7 @@ class JSONEditorWidget(Widget):
         context['widget']['type'] = 'hidden'
         return context
 
-class JSONSchemaField(JSONFormField):
+class JSONSchemaField(fields.CharField):
 
     def __init__(self, schema, options, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
@@ -63,8 +63,20 @@ class JSONSchemaField(JSONFormField):
             else:
                 raise ImproperlyConfigured('STATIC_ROOT is not set')
 
+    def to_python(self, value):
+        if isinstance(value, six.string_types):
+            try:
+                return json.loads(value)
+            except:
+                raise ValidationError('Invalid JSON')
+        return value
+
     def clean(self, value):
-        value = super(JSONSchemaField, self).clean(value)
+
+        try:
+            value = super(JSONSchemaField, self).clean(value)
+        except:
+            raise ValidationError('Invalid JSON')
 
         try:
             jsonschema.validate(value, self.schema)
