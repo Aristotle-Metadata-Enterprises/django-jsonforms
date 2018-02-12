@@ -1,32 +1,35 @@
 $('document').ready(function() {
 
+    // Get value from either a json string or url pointing to a json file
+    function process(value) {
+        var isjson=true;
+        var result;
+
+        try {
+          result = JSON.parse(value);
+        } catch(e) {
+          isjson=false;
+        }
+
+        if (isjson) {
+          return result;
+        } else {
+          return $.getJSON(value)
+            .then(function (response) {
+                return response;
+            });
+        }
+    }
+
     $('.editor_holder').each(function() {
         // Get the DOM Element
         var element = $(this).get(0);
 
-        var schema_url = $(this).attr('schema_url')
-        var options_url = $(this).attr('options_url')
+        var options_text = $(this).attr('options')
+        var schema_text = $(this).attr('schema')
 
-        var schema
-        var options
-        var schema_request = 0
-        var options_request = 0
-
-        if (schema_url !== undefined) {
-            schema_request = $.getJSON(schema_url, function(data) {
-                schema = data;
-            })
-        } else {
-            schema = JSON.parse($(this).attr('schema'));
-        }
-
-        if (options_url !== undefined) {
-            options_request = $.getJSON(options_url, function(data) {
-                options = data;
-            })
-        } else {
-            options = JSON.parse($(this).attr('options'));
-        }
+        var schema = process(schema_text);
+        var options = process(options_text);
 
         var name = $(this).attr('name');
         var hidden_identifier = 'input[name=' + name + ']';
@@ -36,16 +39,17 @@ $('document').ready(function() {
         var form = $(this).closest('form')
 
         //Wait for any ajax requests to complete
-        $.when(schema_request, options_request).done(function() {
-            options.form_name_root = name;
+        $.when(schema, options).done(function(schemaresult, optionsresult) {
+            optionsresult.form_name_root = name;
 
             // Pass initial value though to editor
             if (initial) {
-                options.startval = JSON.parse(initial);
+                optionsresult.startval = JSON.parse(initial);
             }
 
-            options.schema = schema;
-            var editor = new JSONEditor(element, options);
+            optionsresult.schema = schemaresult;
+            // console.log(options);
+            var editor = new JSONEditor(element, optionsresult);
 
             if (form) {
                 $(form).submit(function() {
