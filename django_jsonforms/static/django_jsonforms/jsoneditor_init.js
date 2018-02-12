@@ -21,7 +21,7 @@ $('document').ready(function() {
         }
 
         if (options_url !== undefined) {
-            options_request = $.getJSON(schema_url, function(data) {
+            options_request = $.getJSON(options_url, function(data) {
                 options = data;
             })
         } else {
@@ -37,7 +37,6 @@ $('document').ready(function() {
 
         //Wait for any ajax requests to complete
         $.when(schema_request, options_request).done(function() {
-
             options.form_name_root = name;
 
             // Pass initial value though to editor
@@ -46,7 +45,6 @@ $('document').ready(function() {
             }
 
             options.schema = schema;
-            console.log(options)
             var editor = new JSONEditor(element, options);
 
             if (form) {
