@@ -11,9 +11,9 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='django-jsonforms',
-    version='0.5',
+    version='0.6',
     description='JSON Schema forms for Django',
-    long_description=long_description,
+    long_description='long_description',
     url='https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms',
     author='Harry White',
     packages=find_packages(),
