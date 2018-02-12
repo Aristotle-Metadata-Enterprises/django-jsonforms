@@ -22,7 +22,17 @@ class JSONEditorWidget(Widget):
 
     def get_context(self, name, value, attrs):
         context = super(JSONEditorWidget, self).get_context(name, value, attrs)
-        context.update({'schema': json.dumps(self.schema), 'options': json.dumps(self.options)})
+
+        if isinstance(self.schema, dict):
+            context.update({'schema': json.dumps(self.schema)})
+        else:
+            context.update({'schema_url': self.schema})
+
+        if isinstance(self.options, dict):
+            context.update({'options': json.dumps(self.options)})
+        else:
+            context.update({'options_url': self.options})
+
         context['widget']['type'] = 'hidden'
         return context
 
@@ -32,9 +42,8 @@ class JSONSchemaField(JSONFormField):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
 
         self.schema = self.load(schema)
-        self.options = self.load(options)
 
-        self.widget = JSONEditorWidget(schema=self.schema, options=options)
+        self.widget = JSONEditorWidget(schema=schema, options=options)
 
     def load(self, value):
         if isinstance(value, dict):

@@ -1,3 +1,4 @@
-<div name="{{ widget.name }}" class="editor_holder" schema="{{ schema|stringformat:'s' }}" options="{{ options|stringformat:'s' }}">
+{% load static %}
+<div name="{{ widget.name }}" class="editor_holder" {% if schema_url %} schema_url="{% static schema_url|stringformat:'s' %}" {% elif schema %} schema="{{ schema|stringformat:'s' }}" {% endif %} {% if options_url %} options_url="{% static options_url|stringformat:'s' %}" {% elif options %} options="{{ options|stringformat:'s' }}" {% endif %}>
 </div>
 {% include "django/forms/widgets/input.html" %}
