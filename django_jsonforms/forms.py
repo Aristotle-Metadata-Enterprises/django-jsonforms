@@ -20,18 +20,20 @@ class JSONEditorWidget(Widget):
         self.schema = schema
         self.options = options
 
+    def get_json_url(self, value, name):
+        if isinstance(value, dict):
+            return {name: json.dumps(value)}
+        else:
+            urlname = name + '_url'
+            return {urlname: value}
+
     def get_context(self, name, value, attrs):
         context = super(JSONEditorWidget, self).get_context(name, value, attrs)
 
-        if isinstance(self.schema, dict):
-            context.update({'schema': json.dumps(self.schema)})
-        else:
-            context.update({'schema_url': self.schema})
-
-        if isinstance(self.options, dict):
-            context.update({'options': json.dumps(self.options)})
-        else:
-            context.update({'options_url': self.options})
+        update = self.get_json_url(self.schema, 'schema')
+        context.update(update)
+        update = self.get_json_url(self.options, 'options')
+        context.update(update)
 
         context['widget']['type'] = 'hidden'
         return context
