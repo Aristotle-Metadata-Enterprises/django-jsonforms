@@ -40,12 +40,16 @@ class JSONEditorWidget(Widget):
 
 class JSONSchemaField(fields.CharField):
 
-    def __init__(self, schema, options, *args, **kwargs):
+    def __init__(self, schema, options, ajax=True, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
 
         self.schema = self.load(schema)
 
-        self.widget = JSONEditorWidget(schema=schema, options=options)
+        if (ajax):
+            self.widget = JSONEditorWidget(schema=schema, options=options)
+        else:
+            self.options = self.load(options)
+            self.widget = JSONEditorWidget(schema=self.schema, options=self.options)
 
     def load(self, value):
         if isinstance(value, dict):
@@ -84,6 +88,6 @@ class JSONSchemaField(fields.CharField):
 
 class JSONSchemaForm(forms.Form):
 
-    def __init__(self, schema, options, *args, **kwargs):
+    def __init__(self, schema, options, ajax=True, *args, **kwargs):
         super(JSONSchemaForm, self).__init__(*args, **kwargs)
-        self.fields['json'] = JSONSchemaField(schema=schema, options=options)
+        self.fields['json'] = JSONSchemaField(schema=schema, options=options, ajax=ajax)
