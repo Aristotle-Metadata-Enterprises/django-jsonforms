@@ -73,10 +73,7 @@ class JSONSchemaField(fields.CharField):
 
     def clean(self, value):
 
-        try:
-            value = super(JSONSchemaField, self).clean(value)
-        except:
-            raise ValidationError('Invalid JSON')
+        value = super(JSONSchemaField, self).clean(value)
 
         try:
             jsonschema.validate(value, self.schema)
