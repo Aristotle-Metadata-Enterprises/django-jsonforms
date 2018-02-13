@@ -1,2 +1,3 @@
 django_jsonforms/__pycache__/*
+django_jsonforms/tests/__pycache__/*
 django_jsonforms.egg-info/*
