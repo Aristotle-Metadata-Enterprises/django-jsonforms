@@ -1,7 +1,10 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.forms import ValidationError
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
 import json
+import os
+
+thisdir = os.path.dirname(os.path.dirname(__file__))
 
 class DjangoFormsTest(TestCase):
 
@@ -29,9 +32,7 @@ class DjangoFormsTest(TestCase):
 
         self.options = {'theme': 'html'}
 
-    def test_valid_data_for_schema(self):
-
-        test_json = {
+        self.test_json = {
             'color': 'red',
             'number': 1,
             'list': [
@@ -40,7 +41,10 @@ class DjangoFormsTest(TestCase):
                 'list'
             ]
         }
-        form_data = {'json': json.dumps(test_json)}
+
+    def test_valid_data_for_schema(self):
+
+        form_data = {'json': json.dumps(self.test_json)}
         form = JSONSchemaForm(schema=self.schema, options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -64,4 +68,17 @@ class DjangoFormsTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['json'], [u"\'one\' is not of type \'integer\'"])
 
+    def test_invalid_schema_file(self):
+
+        with self.assertRaises(FileNotFoundError):
+            form = JSONSchemaForm(options=self.options, schema='very/real/file.json')
+
+    @override_settings(STATIC_ROOT=thisdir)
+    def test_valid_data_with_schema_file(self):
+
+        form_data = {'json': json.dumps(self.test_json)}
+        form = JSONSchemaForm(schema='django_jsonforms/test_schema.json', options=self.options, data=form_data)
+        self.assertTrue(form.is_valid())
+
 # Test file and dict options, file does not exist
+# Test form html output to test template rendering
