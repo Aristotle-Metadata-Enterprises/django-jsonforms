@@ -59,7 +59,7 @@ class JSONSchemaField(fields.CharField):
                     static_file.close()
                     return json_value
                 else:
-                    raise FileNotFoundError('File could not be found')
+                    raise FileNotFoundError('File %s could not be found'%file_path)
             else:
                 raise ImproperlyConfigured('STATIC_ROOT is not set')
 
