@@ -77,7 +77,7 @@ class DjangoFormsTest(TestCase):
     def test_valid_data_with_schema_file(self):
 
         form_data = {'json': json.dumps(self.test_json)}
-        form = JSONSchemaForm(schema='django_jsonforms/test_schema.json', options=self.options, data=form_data)
+        form = JSONSchemaForm(schema='tests/test_schema.json', options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
 # Test file and dict options, file does not exist
