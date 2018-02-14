@@ -62,10 +62,6 @@ class JSONSchemaField(fields.CharField):
                     json_value = json.loads(static_file.read())
                     static_file.close()
                     return json_value
-                else:
-                    raise FileNotFoundError('File %s could not be found'%file_path)
-            else:
-                raise ImproperlyConfigured('STATIC_ROOT is not set')
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
