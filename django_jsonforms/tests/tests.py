@@ -1,10 +1,19 @@
 from django.test import TestCase, override_settings
-from django.forms import ValidationError
+from django.forms import ValidationError, Form
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
 import json
 import os
 
+from django_jsonforms.forms import JSONSchemaField
+
 thisdir = os.path.dirname(os.path.dirname(__file__))
+
+class JSONTestForm(Form):
+
+    def __init__(self, schema, options, ajax=True, *args, **kwargs):
+        super(JSONTestForm, self).__init__(*args, **kwargs)
+        self.fields['json1'] = JSONSchemaField(schema=schema, options=options, ajax=ajax)
+        self.fields['json2'] = JSONSchemaField(schema=schema, options=options, ajax=ajax)
 
 class DjangoFormsTest(TestCase):
 
@@ -48,6 +57,12 @@ class DjangoFormsTest(TestCase):
         form = JSONSchemaForm(schema=self.schema, options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
+    def test_valid_data_for_schema_two_fields(self):
+
+        form_data = {'json1': json.dumps(self.test_json), 'json2': json.dumps(self.test_json)}
+        form = JSONTestForm(schema=self.schema, options=self.options, data=form_data)
+        self.assertTrue(form.is_valid())
+
     def test_invalid_json(self):
 
         form_data = {'json': '{\"yeah\": \"yeah}'}
@@ -70,8 +85,8 @@ class DjangoFormsTest(TestCase):
 
     def test_invalid_schema_file(self):
 
-        with self.assertRaises(FileNotFoundError):
-            form = JSONSchemaForm(options=self.options, schema='very/real/file.json')
+        form = JSONSchemaForm(options=self.options, schema='very/real/file.json')
+        self.assertFalse(form.is_valid())
 
     @override_settings(STATIC_ROOT=thisdir)
     def test_valid_data_with_schema_file(self):
