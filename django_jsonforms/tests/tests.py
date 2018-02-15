@@ -66,7 +66,7 @@ class DjangoFormsTest(TestCase):
         # Check that div with class editor_holder was rendered
         self.assertNotEqual(output.find('class=\"editor_holder\"'), -1)
 
-        media = form.media
+        media = str(form.media)
 
         # Check that the media was included correctly
         self.assertNotEqual(media.find('jsoneditor.min.js'), -1)
