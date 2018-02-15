@@ -57,6 +57,22 @@ class DjangoFormsTest(TestCase):
         form = JSONSchemaForm(schema=self.schema, options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
+    def test_render_valid_data(self):
+
+        form_data = {'json': json.dumps(self.test_json)}
+        form = JSONSchemaForm(schema=self.schema, options=self.options, data=form_data)
+        output = form.as_p()
+
+        # Check that div with class editor_holder was rendered
+        self.assertNotEqual(output.find('class=\"editor_holder\"'), -1)
+
+        media = form.media
+
+        # Check that the media was included correctly
+        self.assertNotEqual(media.find('jsoneditor.min.js'), -1)
+        self.assertNotEqual(media.find('jsoneditor_init.js'), -1)
+
+
     def test_valid_data_for_schema_two_fields(self):
 
         form_data = {'json1': json.dumps(self.test_json), 'json2': json.dumps(self.test_json)}
@@ -95,5 +111,5 @@ class DjangoFormsTest(TestCase):
         form = JSONSchemaForm(schema='tests/test_schema.json', options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
-# Test file and dict options, file does not exist
+
 # Test form html output to test template rendering
