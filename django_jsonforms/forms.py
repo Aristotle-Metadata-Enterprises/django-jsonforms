@@ -2,11 +2,15 @@ from django import forms
 from django.forms import fields, ValidationError
 from django.forms.widgets import Textarea, Widget
 import jsonschema
-import json
 import os
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
+
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 
 class JSONEditorWidget(Widget):
 
