@@ -5,9 +5,9 @@ The field also validates submitted data against the json schema
 
 # Installation
 
-'''
-  pip install git+https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms#egg=django-jsonforms
-'''
+```
+pip install git+https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms#egg=django-jsonforms
+```
 
 # Requirements
 
@@ -22,16 +22,16 @@ The options parameter is passed through to the json-editor object, these options
 An optional ajax parameter determines whether statics are loaded via ajax on the frontend or loaded in the backend and put into html parameters (defaults to true)
 
 Example:
-'''
-  from django.forms import ModelForm, Form
-  from django_jsonforms.forms import JSONSchemaField
+```
+from django.forms import ModelForm, Form
+from django_jsonforms.forms import JSONSchemaField
 
-  class RegistrySettingsForm(Form):
+class RegistrySettingsForm(Form):
 
-      json = JSONSchemaField(
-          schema = 'schema/schema.json',
-          options = 'schema/options.json'
-      )
-'''
+    json = JSONSchemaField(
+        schema = 'schema/schema.json',
+        options = 'schema/options.json'
+    )
+```
 
 When rendering the form dont forget to render the forms media with the template tag {{ form.media }}. This is required for the field to function correctly
