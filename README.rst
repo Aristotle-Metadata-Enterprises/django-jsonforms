@@ -8,7 +8,7 @@ Installation
 ------------
 
 
-``pip install git+https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms#egg=django-jsonforms``
+``pip install django-jsonforms``
 
 Add 'django_jsonforms' to your INSTALLED_APPS
 

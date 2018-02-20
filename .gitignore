@@ -3,3 +3,6 @@ django_jsonforms/tests/__pycache__/*
 django_jsonforms.egg-info/*
 .tox/*
 venv/*
+build/*
+dist/*
+*.pyc
