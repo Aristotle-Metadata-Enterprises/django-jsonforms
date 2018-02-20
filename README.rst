@@ -8,7 +8,7 @@ Installation
 ------------
 
 
-  pip install git+https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms#egg=django-jsonforms
+``pip install git+https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms#egg=django-jsonforms``
 
 Add 'django_jsonforms' to your INSTALLED_APPS
 
@@ -53,6 +53,7 @@ Example showing all options::
 Since it is common to have only one field in this type of form. A form with a single JSONSchemaField named json is also available to use
 
 Form Example::
+
     from django_jsonforms.forms import JSONSchemaForm
 
     form = JSONSchemaForm(schema=... , options=... , ajax=...)
