@@ -5,7 +5,7 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 # Get the long description from the README file
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
