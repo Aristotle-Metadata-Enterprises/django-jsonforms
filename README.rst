@@ -4,8 +4,6 @@ django-jsonforms
 .. image:: https://travis-ci.org/Aristotle-Metadata-Enterprises/django-jsonforms.svg?branch=master
     :target: https://travis-ci.org/Aristotle-Metadata-Enterprises/django-jsonforms
 
-JSON Schema forms for Django
-
 django-jsonforms provides the JSONSchemaField, a Django form field that renders a dynamic form created from a json schema. The form is created using json-editor (https://github.com/jdorn/json-editor). The field also validates submitted data against the json schema and can be rendered as a standard form field.
 
 Installation
