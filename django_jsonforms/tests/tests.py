@@ -141,7 +141,7 @@ class JSONFormsLiveTest(StaticLiveServerTestCase):
         # Fill form
         self.selenium.find_element_by_name('json[color]').send_keys('blue')
         self.selenium.find_element_by_name('json[number]').send_keys('100')
-        add_item_button = self.selenium.find_element_by_xpath('/html/body/form/div/div/div[2]/div/div/div[3]/div/div[2]/div[2]/button[1]')
+        add_item_button = self.selenium.find_element_by_xpath("(//button[@class=' json-editor-btn-add '])[2]")
         add_item_button.click()
         self.selenium.find_element_by_name('json[list][0]').send_keys('Item1')
         add_item_button.click()
