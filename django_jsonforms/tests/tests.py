@@ -2,6 +2,7 @@ from django.test import TestCase, override_settings
 from django.forms import ValidationError, Form
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.conf import settings
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,6 +10,7 @@ from selenium.webdriver.common.by import By
 import json
 import os
 import time
+from unittest import skipUnless
 
 from django_jsonforms.forms import JSONSchemaField
 
@@ -117,7 +119,7 @@ class DjangoFormsTest(TestCase):
         form = JSONSchemaForm(schema='tests/test_schema.json', options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
-
+@skipUnless(settings.SELENIUM_TEST == True, "Selenium tests not requested")
 class JSONFormsLiveTest(StaticLiveServerTestCase):
 
     @classmethod
