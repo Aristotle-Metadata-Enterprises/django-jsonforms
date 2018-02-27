@@ -7,7 +7,7 @@ python:
 install:
 - pip install tox-travis
 script:
-- tox
+- xvfb-run tox
 deploy:
   provider: pypi
   user: hwhite4
