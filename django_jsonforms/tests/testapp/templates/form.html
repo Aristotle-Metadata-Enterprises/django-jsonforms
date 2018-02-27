@@ -4,6 +4,11 @@
 {{ form.media }}
 </head>
 <body>
+<form method="post">
+{% csrf_token %}
+{{ form.json.errors }}
 {{ form.as_p }}
+<input id="submit_button" type="submit" value="Submit">
+</form>
 </body>
 </html>

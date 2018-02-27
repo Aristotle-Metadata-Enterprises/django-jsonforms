@@ -1,8 +1,14 @@
 from django.test import TestCase, override_settings
 from django.forms import ValidationError, Form
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import json
 import os
+import time
 
 from django_jsonforms.forms import JSONSchemaField
 
@@ -112,4 +118,42 @@ class DjangoFormsTest(TestCase):
         self.assertTrue(form.is_valid())
 
 
-# Test form html output to test template rendering
+class JSONFormsLiveTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = WebDriver()
+        cls.selenium.implicitly_wait(10)
+        cls.wait = WebDriverWait(cls.selenium, 10)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def submit_single_form(self, url):
+        # Load form
+        self.selenium.get(self.live_server_url + url)
+
+        # Fill form
+        self.selenium.find_element_by_name('json[color]').send_keys('blue')
+        self.selenium.find_element_by_name('json[number]').send_keys('100')
+        add_item_button = self.selenium.find_element_by_xpath('/html/body/form/div/div/div[2]/div/div/div[3]/div/div[2]/div[2]/button[1]')
+        add_item_button.click()
+        self.selenium.find_element_by_name('json[list][0]').send_keys('Item1')
+        add_item_button.click()
+        self.selenium.find_element_by_name('json[list][1]').send_keys('Item2')
+
+        # Submit form
+        self.selenium.find_element_by_id('submit_button').click()
+
+        # Check success
+        self.wait.until(EC.visibility_of_element_located((By.ID, 'success')))
+        self.assertEqual(self.selenium.current_url, self.live_server_url + '/success/')
+
+    def test_single(self):
+        self.submit_single_form('/testform')
+
+    def test_single_static(self):
+        self.submit_single_form('/testformstatic')
