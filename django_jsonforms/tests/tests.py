@@ -116,7 +116,7 @@ class DjangoFormsTest(TestCase):
     def test_valid_data_with_schema_file(self):
 
         form_data = {'json': json.dumps(self.test_json)}
-        form = JSONSchemaForm(schema='tests/test_schema.json', options=self.options, data=form_data)
+        form = JSONSchemaForm(schema='tests/testapp/staticfiles/test_schema.json', options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
 @skipUnless(settings.SELENIUM_TEST == True, "Selenium tests not requested")
@@ -134,18 +134,23 @@ class JSONFormsLiveTest(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
+    def fill_form(self, field_name, add_button_number):
+
+        self.selenium.find_element_by_name(field_name + '[color]').send_keys('blue')
+        self.selenium.find_element_by_name(field_name + '[number]').send_keys('100')
+        button_xpath = "(//button[@class=' json-editor-btn-add '])[" + str(add_button_number) + "]"
+        add_item_button = self.selenium.find_element_by_xpath(button_xpath)
+        add_item_button.click()
+        self.selenium.find_element_by_name(field_name + '[list][0]').send_keys('Item1')
+        add_item_button.click()
+        self.selenium.find_element_by_name(field_name + '[list][1]').send_keys('Item2')
+
     def submit_single_form(self, url):
         # Load form
         self.selenium.get(self.live_server_url + url)
 
         # Fill form
-        self.selenium.find_element_by_name('json[color]').send_keys('blue')
-        self.selenium.find_element_by_name('json[number]').send_keys('100')
-        add_item_button = self.selenium.find_element_by_xpath("(//button[@class=' json-editor-btn-add '])[2]")
-        add_item_button.click()
-        self.selenium.find_element_by_name('json[list][0]').send_keys('Item1')
-        add_item_button.click()
-        self.selenium.find_element_by_name('json[list][1]').send_keys('Item2')
+        self.fill_form('json', 2)
 
         # Submit form
         self.selenium.find_element_by_id('submit_button').click()
@@ -159,3 +164,18 @@ class JSONFormsLiveTest(StaticLiveServerTestCase):
 
     def test_single_static(self):
         self.submit_single_form('/testformstatic')
+
+    def test_double(self):
+
+        self.selenium.get(self.live_server_url + '/testformdouble')
+
+        # Fill both forms
+        self.fill_form('json1', 2)
+        self.fill_form('json2', 4)
+
+        # Submit form
+        self.selenium.find_element_by_id('submit_button').click()
+
+        # Check success
+        self.wait.until(EC.visibility_of_element_located((By.ID, 'success')))
+        self.assertEqual(self.selenium.current_url, self.live_server_url + '/success/')
