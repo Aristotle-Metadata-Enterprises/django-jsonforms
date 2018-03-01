@@ -1,2 +1,4 @@
 # Include the license file
 include LICENSE.txt
+recursive-include django_jsonforms/static *
+recursive-include django_jsonforms/templates *
