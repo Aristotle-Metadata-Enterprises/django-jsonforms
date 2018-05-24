@@ -17,7 +17,7 @@ class JSONEditorWidget(Widget):
     template_name = 'django_jsonforms/jsoneditor.html'
 
     class Media:
-        js = ('django_jsonforms/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
+        js = ('https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.0.0/dist/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
 
     def __init__(self, schema, options, *args, **kwargs):
         super(JSONEditorWidget, self).__init__(*args, **kwargs)
