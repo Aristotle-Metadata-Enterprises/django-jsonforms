@@ -110,4 +110,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Test settings
-SELENIUM_TEST = True
+SELENIUM_TEST = False

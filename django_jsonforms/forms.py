@@ -6,6 +6,7 @@ import os
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
+from django.conf import settings
 
 try:
     import json
@@ -47,6 +48,9 @@ class JSONSchemaField(fields.CharField):
     def __init__(self, schema, options, ajax=True, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
 
+        self.schemadir = getattr(settings, 'JSONFORMS_SCHEMA_DIR', settings.STATIC_ROOT)
+        self.backvalidate = getattr(settings, 'JSONFORMS_SCHEMA_VALIDATE', True)
+
         self.schema = self.load(schema)
 
         if (ajax):
@@ -59,13 +63,14 @@ class JSONSchemaField(fields.CharField):
         if isinstance(value, dict):
             return value
         elif isinstance(value, str):
-            if (settings.STATIC_ROOT):
-                file_path = os.path.join(settings.STATIC_ROOT, value)
-                if os.path.isfile(file_path):
-                    static_file = open(file_path, 'r')
-                    json_value = json.loads(static_file.read())
-                    static_file.close()
-                    return json_value
+            file_path = os.path.join(self.schemadir, value)
+            if os.path.isfile(file_path):
+                static_file = open(file_path, 'r')
+                json_value = json.loads(static_file.read())
+                static_file.close()
+                return json_value
+
+            return None
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
@@ -79,10 +84,11 @@ class JSONSchemaField(fields.CharField):
 
         value = super(JSONSchemaField, self).clean(value)
 
-        try:
-            jsonschema.validate(value, self.schema)
-        except jsonschema.exceptions.ValidationError as e:
-            raise ValidationError(message=e.message)
+        if self.backvalidate:
+            try:
+                jsonschema.validate(value, self.schema)
+            except jsonschema.exceptions.ValidationError as e:
+                raise ValidationError(message=e.message)
 
         return value
 

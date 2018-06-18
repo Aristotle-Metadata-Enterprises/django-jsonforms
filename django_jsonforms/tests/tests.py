@@ -107,6 +107,17 @@ class DjangoFormsTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['json'], [u"\'one\' is not of type \'integer\'"])
 
+    @override_settings(JSONFORMS_SCHEMA_VALIDATE=False)
+    def test_no_validate_setting(self):
+
+        test_json = {
+            'color': 'red',
+            'number': 'one',
+        }
+        form_data = {'json': json.dumps(test_json)}
+        form = JSONSchemaForm(schema=self.schema, options=self.options, data=form_data)
+        self.assertTrue(form.is_valid())
+
     def test_invalid_schema_file(self):
 
         form = JSONSchemaForm(options=self.options, schema='very/real/file.json')
@@ -114,6 +125,13 @@ class DjangoFormsTest(TestCase):
 
     @override_settings(STATIC_ROOT=thisdir)
     def test_valid_data_with_schema_file(self):
+
+        form_data = {'json': json.dumps(self.test_json)}
+        form = JSONSchemaForm(schema='tests/testapp/staticfiles/test_schema.json', options=self.options, data=form_data)
+        self.assertTrue(form.is_valid())
+
+    @override_settings(JSONFORMS_SCHEMA_DIR=thisdir)
+    def test_valid_data_with_schema_file_dir_setting(self):
 
         form_data = {'json': json.dumps(self.test_json)}
         form = JSONSchemaForm(schema='tests/testapp/staticfiles/test_schema.json', options=self.options, data=form_data)
