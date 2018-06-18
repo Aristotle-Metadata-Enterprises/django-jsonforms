@@ -16,7 +16,7 @@ Install with pip
 
 Add ``django_jsonforms`` to your INSTALLED_APPS
 
-Make sure you have APP_DIRS set to True in your TEMPLATES setting
+Make sure you have APP_DIRS set to True in your ``TEMPLATES`` setting. 
 More about the templates setting here: https://docs.djangoproject.com/en/2.0/ref/settings/#templates
 
 Requirements
@@ -25,7 +25,7 @@ Requirements
 The python packages jsonschema and django will be installed when installing the package through pip.
 Additionally jQuery is required on the page that will be rendering the form.
 
-Instructions for adding jQuery are here: https://www.w3schools.com/jquery/jquery_get_started.asp
+Instructions for adding jQuery can be found here: https://www.w3schools.com/jquery/jquery_get_started.asp
 
 Usage
 -----
@@ -79,6 +79,6 @@ The data returned when the field is submitted is in the form of a python diction
 Settings
 --------
 
-the ``JSONFORMS_SCHEMA_DIR`` setting can be used to specify the file directory to load the schema from. This directory will need to be seving static files for the form to funciton correctly
+The ``JSONFORMS_SCHEMA_DIR`` setting can be used to specify the file directory to load the schema from. This directory will need to be seving static files for the form to funciton correctly
 
 The ``JSONFORMS_SCHEMA_VALIDATE`` settings can be set to False to disable backend validation of the submitted json. This can allow a user to submit any json if the frontend validation is bypassed. This settings should only be used during development
