@@ -22,7 +22,7 @@ More about the templates setting here: https://docs.djangoproject.com/en/2.0/ref
 Requirements
 ------------
 
-The python requirements jsonschema and django will be installed when installing the package through pip
+The python packages jsonschema and django will be installed when installing the package through pip.
 Additionally jQuery is required on the page that will be rendering the form.
 
 Instructions for adding jQuery can be found here: https://www.w3schools.com/jquery/jquery_get_started.asp
@@ -30,7 +30,7 @@ Instructions for adding jQuery can be found here: https://www.w3schools.com/jque
 Usage
 -----
 
-The field can be used like any other Django form field, it has the schema and options attributes which can be either python dictionaries or paths to staticfiles as as shown below
+The field can be used like any other Django form field, it has the schema and options attributes which can be either python dictionaries or paths to static files as as shown below
 
 + The schema parameter is the json schema the field will use
 + The options parameter is passed through to the json-editor object, these options are described here: https://github.com/jdorn/json-editor#options (the schema option is not used)
@@ -49,6 +49,8 @@ Example::
         )
 
 In this example the schema file would be located in 'static/schema/schema.json'. You will need to run collectstatic after creating the file
+
+To load the file from a directory other than STATIC_ROOT see the ``JSONFORMS_SCHEMA_DIR`` setting below
 
 Example showing all options::
 
@@ -73,3 +75,10 @@ Note:
 When rendering the form don't forget to render the forms media with the template tag {{ form.media }}. This is required for the field to function correctly
 
 The data returned when the field is submitted is in the form of a python dictionary. This may need to be converted before being stored depending on the model field being used
+
+Settings
+--------
+
+The ``JSONFORMS_SCHEMA_DIR`` setting can be used to specify the file directory to load the schema from. This directory will need to be seving static files for the form to funciton correctly
+
+The ``JSONFORMS_SCHEMA_VALIDATE`` settings can be set to False to disable backend validation of the submitted json. This can allow a user to submit any json if the frontend validation is bypassed. This settings should only be used during development
