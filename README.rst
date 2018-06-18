@@ -16,7 +16,7 @@ Install with pip
 
 Add ``django_jsonforms`` to your INSTALLED_APPS
 
-Make sure you have APP_DIRS set to True in your TEMPLATES setting
+Make sure you have APP_DIRS set to True in your ``TEMPLATES`` setting. 
 More about the templates setting here: https://docs.djangoproject.com/en/2.0/ref/settings/#templates
 
 Requirements
@@ -25,7 +25,7 @@ Requirements
 The python requirements jsonschema and django will be installed when installing the package through pip
 Additionally jQuery is required on the page that will be rendering the form.
 
-Instructions for adding jQuery here: https://www.w3schools.com/jquery/jquery_get_started.asp
+Instructions for adding jQuery can be found here: https://www.w3schools.com/jquery/jquery_get_started.asp
 
 Usage
 -----
