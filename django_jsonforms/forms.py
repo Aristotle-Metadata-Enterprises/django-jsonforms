@@ -1,24 +1,30 @@
 from django import forms
 from django.forms import fields, ValidationError
-from django.forms.widgets import Textarea, Widget
+from django.forms.widgets import Widget
 import jsonschema
 import os
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
-from django.conf import settings
+from django.contrib.staticfiles import finders
 
 try:
     import json
 except ImportError:
     from django.utils import simplejson as json
 
+
 class JSONEditorWidget(Widget):
 
     template_name = 'django_jsonforms/jsoneditor.html'
 
     class Media:
-        js = ('https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.0.0/dist/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
+        js = (
+            '%s/%s' % (
+                'https://cdn.jsdelivr.net/npm/@json-editor',
+                'json-editor@1.0.0/dist/jsoneditor.min.js'
+            ),
+            'django_jsonforms/jsoneditor_init.js'
+        )
 
     def __init__(self, schema, options, *args, **kwargs):
         super(JSONEditorWidget, self).__init__(*args, **kwargs)
@@ -43,13 +49,15 @@ class JSONEditorWidget(Widget):
         context['widget']['type'] = 'hidden'
         return context
 
+
 class JSONSchemaField(fields.CharField):
 
     def __init__(self, schema, options, ajax=True, *args, **kwargs):
         super(JSONSchemaField, self).__init__(*args, **kwargs)
 
-        self.schemadir = getattr(settings, 'JSONFORMS_SCHEMA_DIR', settings.STATIC_ROOT)
-        self.backvalidate = getattr(settings, 'JSONFORMS_SCHEMA_VALIDATE', True)
+        self.schemadir = getattr(settings, 'JSONFORMS_SCHEMA_DIR', False)
+        self.backvalidate = getattr(settings, 'JSONFORMS_SCHEMA_VALIDATE',
+                                    True)
 
         self.schema = self.load(schema)
 
@@ -57,13 +65,17 @@ class JSONSchemaField(fields.CharField):
             self.widget = JSONEditorWidget(schema=schema, options=options)
         else:
             self.options = self.load(options)
-            self.widget = JSONEditorWidget(schema=self.schema, options=self.options)
+            self.widget = JSONEditorWidget(schema=self.schema,
+                                           options=self.options)
 
     def load(self, value):
         if isinstance(value, dict):
             return value
         elif isinstance(value, str):
-            file_path = os.path.join(self.schemadir, value)
+            if self.schemadir:
+                file_path = os.path.join(self.schemadir, value)
+            else:
+                file_path = finders.find(value)
             if os.path.isfile(file_path):
                 static_file = open(file_path, 'r')
                 json_value = json.loads(static_file.read())
@@ -81,7 +93,6 @@ class JSONSchemaField(fields.CharField):
         return value
 
     def clean(self, value):
-
         value = super(JSONSchemaField, self).clean(value)
 
         if self.backvalidate:
@@ -92,8 +103,10 @@ class JSONSchemaField(fields.CharField):
 
         return value
 
+
 class JSONSchemaForm(forms.Form):
 
     def __init__(self, schema, options, ajax=True, *args, **kwargs):
         super(JSONSchemaForm, self).__init__(*args, **kwargs)
-        self.fields['json'] = JSONSchemaField(schema=schema, options=options, ajax=ajax)
+        self.fields['json'] = JSONSchemaField(
+            schema=schema, options=options, ajax=ajax)
