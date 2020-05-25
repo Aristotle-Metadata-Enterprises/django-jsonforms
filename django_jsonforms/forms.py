@@ -91,6 +91,9 @@ class JSONSchemaField(fields.CharField):
 
         return value
 
+    def prepare_value(self, value):
+        return json.dumps(value)
+
 class JSONSchemaForm(forms.Form):
 
     def __init__(self, schema, options, ajax=True, *args, **kwargs):
