@@ -20,6 +20,6 @@ setup(
     url='https://github.com/Aristotle-Metadata-Enterprises/django-jsonforms',
     author='Harry White',
     packages=find_packages(),
-    install_requires=['jsonschema','django'],
+    install_requires=['jsonschema','django>=2.0'],
     license='BSD'
 )
