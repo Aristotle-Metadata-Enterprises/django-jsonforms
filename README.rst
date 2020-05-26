@@ -22,10 +22,7 @@ More about the templates setting here: https://docs.djangoproject.com/en/2.0/ref
 Requirements
 ------------
 
-The python packages jsonschema and django will be installed when installing the package through pip.
-Additionally jQuery is required on the page that will be rendering the form.
-
-Instructions for adding jQuery can be found here: https://www.w3schools.com/jquery/jquery_get_started.asp
+`jQuery <https://jquery.com>`_ is required on the page that will be rendering the form.
 
 Usage
 -----
