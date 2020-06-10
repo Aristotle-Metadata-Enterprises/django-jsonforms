@@ -1,23 +1,22 @@
 from django import forms
 from django.forms import fields, ValidationError
-from django.forms.widgets import Textarea, Widget
+from django.forms.widgets import Widget
 import jsonschema
 import os
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
-from django.conf import settings
 
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
+import json
+
 
 class JSONEditorWidget(Widget):
 
     template_name = 'django_jsonforms/jsoneditor.html'
 
     class Media:
-        js = ('https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.0.0/dist/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
+        js = (
+            'https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.3.5/dist/jsoneditor.min.js',
+            'django_jsonforms/jsoneditor_init.js'
+        )
 
     def __init__(self, schema, options, *args, **kwargs):
         super(JSONEditorWidget, self).__init__(*args, **kwargs)
@@ -41,6 +40,7 @@ class JSONEditorWidget(Widget):
 
         context['widget']['type'] = 'hidden'
         return context
+
 
 class JSONSchemaField(fields.CharField):
 
@@ -75,7 +75,7 @@ class JSONSchemaField(fields.CharField):
         if isinstance(value, str):
             try:
                 return json.loads(value)
-            except:
+            except json.JSONDecodeError:
                 raise ValidationError('Invalid JSON')
         return value
 
@@ -92,7 +92,10 @@ class JSONSchemaField(fields.CharField):
         return value
 
     def prepare_value(self, value):
-        return json.dumps(value)
+        if isinstance(value, dict):
+            return json.dumps(value)
+        return value
+
 
 class JSONSchemaForm(forms.Form):
 

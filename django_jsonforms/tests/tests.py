@@ -1,5 +1,5 @@
 from django.test import TestCase, override_settings
-from django.forms import ValidationError, Form
+from django.forms import Form
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
@@ -9,12 +9,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import json
 import os
-import time
 from unittest import skipUnless
 
-from django_jsonforms.forms import JSONSchemaField
-
 thisdir = os.path.dirname(os.path.dirname(__file__))
+
 
 class JSONTestForm(Form):
 
@@ -22,6 +20,7 @@ class JSONTestForm(Form):
         super(JSONTestForm, self).__init__(*args, **kwargs)
         self.fields['json1'] = JSONSchemaField(schema=schema, options=options, ajax=ajax)
         self.fields['json2'] = JSONSchemaField(schema=schema, options=options, ajax=ajax)
+
 
 class DjangoFormsTest(TestCase):
 
@@ -80,7 +79,6 @@ class DjangoFormsTest(TestCase):
         self.assertNotEqual(media.find('jsoneditor.min.js'), -1)
         self.assertNotEqual(media.find('jsoneditor_init.js'), -1)
 
-
     def test_valid_data_for_schema_two_fields(self):
 
         form_data = {'json1': json.dumps(self.test_json), 'json2': json.dumps(self.test_json)}
@@ -137,7 +135,8 @@ class DjangoFormsTest(TestCase):
         form = JSONSchemaForm(schema='tests/testapp/staticfiles/test_schema.json', options=self.options, data=form_data)
         self.assertTrue(form.is_valid())
 
-@skipUnless(settings.SELENIUM_TEST == True, "Selenium tests not requested")
+
+@skipUnless(settings.SELENIUM_TEST, "Selenium tests not requested")
 class JSONFormsLiveTest(StaticLiveServerTestCase):
 
     @classmethod

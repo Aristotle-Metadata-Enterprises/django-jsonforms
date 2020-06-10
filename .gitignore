@@ -6,3 +6,5 @@ venv/*
 build/*
 dist/*
 *.pyc
+.venv
+.mypy_cache
