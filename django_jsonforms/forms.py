@@ -75,7 +75,7 @@ class JSONSchemaField(fields.CharField):
         if isinstance(value, str):
             try:
                 return json.loads(value)
-            except:
+            except json.JSONDecodeError:
                 raise ValidationError('Invalid JSON')
         return value
 
