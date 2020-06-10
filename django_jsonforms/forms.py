@@ -13,7 +13,10 @@ class JSONEditorWidget(Widget):
     template_name = 'django_jsonforms/jsoneditor.html'
 
     class Media:
-        js = ('https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.3.5/dist/jsoneditor.min.js', 'django_jsonforms/jsoneditor_init.js')
+        js = (
+            'https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.3.5/dist/jsoneditor.min.js',
+            'django_jsonforms/jsoneditor_init.js'
+        )
 
     def __init__(self, schema, options, *args, **kwargs):
         super(JSONEditorWidget, self).__init__(*args, **kwargs)
@@ -37,6 +40,7 @@ class JSONEditorWidget(Widget):
 
         context['widget']['type'] = 'hidden'
         return context
+
 
 class JSONSchemaField(fields.CharField):
 
@@ -91,6 +95,7 @@ class JSONSchemaField(fields.CharField):
         if isinstance(value, dict):
             return json.dumps(value)
         return value
+
 
 class JSONSchemaForm(forms.Form):
 
