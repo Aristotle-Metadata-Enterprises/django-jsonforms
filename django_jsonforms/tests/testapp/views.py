@@ -3,7 +3,8 @@ from django.forms import Form
 from django.http import HttpResponse
 from django.urls import reverse
 
-from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
+from django_jsonforms.forms import JSONSchemaField
+import json
 
 # Forms
 

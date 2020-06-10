@@ -1,5 +1,5 @@
 from django.test import TestCase, override_settings
-from django.forms import ValidationError, Form
+from django.forms import Form
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
@@ -9,10 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import json
 import os
-import time
 from unittest import skipUnless
-
-from django_jsonforms.forms import JSONSchemaField
 
 thisdir = os.path.dirname(os.path.dirname(__file__))
 
