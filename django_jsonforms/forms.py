@@ -13,6 +13,11 @@ class JSONEditorWidget(Widget):
     template_name = 'django_jsonforms/jsoneditor.html'
 
     class Media:
+        css = {
+            'all': (
+                'https://unpkg.com/tailwindcss@2.1.2/dist/tailwind.min.css',
+            )
+        }
         js = (
             'https://cdn.jsdelivr.net/npm/@json-editor/json-editor@2.5.4/dist/jsoneditor.min.js',
             'django_jsonforms/jsoneditor_init.js'
