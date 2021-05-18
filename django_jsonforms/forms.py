@@ -14,7 +14,7 @@ class JSONEditorWidget(Widget):
 
     class Media:
         js = (
-            'https://cdn.jsdelivr.net/npm/@json-editor/json-editor@1.3.5/dist/jsoneditor.min.js',
+            'https://cdn.jsdelivr.net/npm/@json-editor/json-editor@2.5.4/dist/jsoneditor.min.js',
             'django_jsonforms/jsoneditor_init.js'
         )
 
