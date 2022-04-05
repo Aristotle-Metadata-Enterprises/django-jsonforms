@@ -92,7 +92,7 @@ class JSONSchemaField(fields.CharField):
         return value
 
     def prepare_value(self, value):
-        if isinstance(value, dict):
+        if isinstance(value, (dict, list)):
             return json.dumps(value)
         return value
 
